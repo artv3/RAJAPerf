@@ -60,12 +60,13 @@ void ADD::runKernel(VariantID vid)
   switch ( vid ) {
 
     case Base_Seq : {
-
+    
       ADD_DATA_SETUP_CPU;
 
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
+        RAJA_NO_SIMD
         for (Index_type i = ibegin; i < iend; ++i ) {
           ADD_BODY;
         }
@@ -76,13 +77,48 @@ void ADD::runKernel(VariantID vid)
       break;
     }
 
-    case RAJA_Seq : {
+  case Base_Loop : {
+            
+    ADD_DATA_SETUP_CPU;
 
+    startTimer();
+    for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+      for (Index_type i = ibegin; i < iend; ++i ) {
+        ADD_BODY;
+      }
+
+    }
+    stopTimer();
+    
+    break;
+  }
+
+  case Base_Simd : {
+
+    ADD_DATA_SETUP_CPU;
+    
+    startTimer();
+    for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+      RAJA_SIMD
+        for (Index_type i = ibegin; i < iend; ++i ) {
+          ADD_BODY;
+        }
+      
+    }
+    stopTimer();
+    
+    break;
+  }
+    
+  case RAJA_Seq : {
+    
       ADD_DATA_SETUP_CPU;
-
+      
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
-
+        
         RAJA::forall<RAJA::simd_exec>(
           RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
           ADD_BODY;
@@ -90,9 +126,47 @@ void ADD::runKernel(VariantID vid)
 
       }
       stopTimer();
-
+      
       break;
+  }
+
+
+  case RAJA_Loop : {
+    
+    ADD_DATA_SETUP_CPU;
+    
+    startTimer();
+    for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+      
+      RAJA::forall<RAJA::simd_exec>(
+        RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
+          ADD_BODY;
+        });
+
     }
+    stopTimer();
+    
+    break;
+  }
+
+
+  case RAJA_Simd : {
+    
+    ADD_DATA_SETUP_CPU;
+      
+    startTimer();
+    for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+        
+      RAJA::forall<RAJA::simd_exec>(
+        RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
+          ADD_BODY;
+        });
+
+    }
+    stopTimer();
+      
+    break;
+  }
 
 #if defined(RAJA_ENABLE_OPENMP)
     case Base_OpenMP : {

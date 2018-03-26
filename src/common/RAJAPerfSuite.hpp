@@ -163,7 +163,11 @@ enum KernelID {
 enum VariantID {
 
   Base_Seq = 0,
+  Base_Loop,
+  Base_Simd,
   RAJA_Seq,
+  RAJA_Loop,
+  RAJA_Simd,
 
 #if defined(RAJA_ENABLE_OPENMP)
   Base_OpenMP,

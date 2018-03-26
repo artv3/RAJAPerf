@@ -186,7 +186,11 @@ static const std::string VariantNames [] =
 {
 
   std::string("Base_Seq"),
+  std::string("Base_Loop"),
+  std::string("Base_Simd"),
   std::string("RAJA_Seq"),
+  std::string("RAJA_Loop"),
+  std::string("RAJA_Simd"),
 
 #if defined(RAJA_ENABLE_OPENMP)
   std::string("Base_OpenMP"),
