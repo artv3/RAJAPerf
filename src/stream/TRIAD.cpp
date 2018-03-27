@@ -37,8 +37,9 @@ namespace stream
 TRIAD::TRIAD(const RunParams& params)
   : KernelBase(rajaperf::Stream_TRIAD, params)
 {
-   setDefaultSize(1000000);
-   setDefaultReps(1000);
+  //setDefaultSize(1000000);
+   setDefaultSize(1024);
+   setDefaultReps(9000);
 }
 
 TRIAD::~TRIAD() 
@@ -68,6 +69,7 @@ void TRIAD::runKernel(VariantID vid)
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
+	RAJA_NO_SIMD
         for (Index_type i = ibegin; i < iend; ++i ) {
           TRIAD_BODY;
         }
@@ -78,7 +80,79 @@ void TRIAD::runKernel(VariantID vid)
       break;
     }
 
+    case Base_Loop : {
+
+      TRIAD_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+        for (Index_type i = ibegin; i < iend; ++i ) {
+          TRIAD_BODY;
+        }
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+    case Base_Simd : {
+
+      TRIAD_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+	RAJA_SIMD
+        for (Index_type i = ibegin; i < iend; ++i ) {
+          TRIAD_BODY;
+        }
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+
     case RAJA_Seq : {
+
+      TRIAD_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+        RAJA::forall<RAJA::seq_exec>(
+          RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
+          TRIAD_BODY;
+        });
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+    case RAJA_Loop : {
+
+      TRIAD_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+        RAJA::forall<RAJA::loop_exec>(
+          RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
+          TRIAD_BODY;
+        });
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+    case RAJA_Simd : {
 
       TRIAD_DATA_SETUP_CPU;
 

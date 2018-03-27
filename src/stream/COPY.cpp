@@ -35,8 +35,9 @@ namespace stream
 COPY::COPY(const RunParams& params)
   : KernelBase(rajaperf::Stream_COPY, params)
 {
-   setDefaultSize(1000000);
-   setDefaultReps(1800);
+  //setDefaultSize(1000000);
+   setDefaultSize(1024);
+   setDefaultReps(9000);
 }
 
 COPY::~COPY() 
@@ -64,6 +65,43 @@ void COPY::runKernel(VariantID vid)
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
+	RAJA_NO_SIMD
+        for (Index_type i = ibegin; i < iend; ++i ) {
+          COPY_BODY;
+        }
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+
+    case Base_Loop : {
+
+      COPY_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+        for (Index_type i = ibegin; i < iend; ++i ) {
+          COPY_BODY;
+        }
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+    case Base_Simd : {
+
+      COPY_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+	RAJA_SIMD
         for (Index_type i = ibegin; i < iend; ++i ) {
           COPY_BODY;
         }
@@ -75,6 +113,42 @@ void COPY::runKernel(VariantID vid)
     }
 
     case RAJA_Seq : {
+
+      COPY_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+        RAJA::forall<RAJA::seq_exec>(
+          RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
+          COPY_BODY;
+        });
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+    case RAJA_Loop : {
+
+      COPY_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+        RAJA::forall<RAJA::loop_exec>(
+          RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
+          COPY_BODY;
+        });
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+    case RAJA_Simd : {
 
       COPY_DATA_SETUP_CPU;
 

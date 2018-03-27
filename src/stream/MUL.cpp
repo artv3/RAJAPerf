@@ -36,8 +36,9 @@ namespace stream
 MUL::MUL(const RunParams& params)
   : KernelBase(rajaperf::Stream_MUL, params)
 {
-   setDefaultSize(1000000);
-   setDefaultReps(1800);
+  //setDefaultSize(1000000);
+   setDefaultSize(1024);
+   setDefaultReps(9000);
 }
 
 MUL::~MUL() 
@@ -67,6 +68,42 @@ void MUL::runKernel(VariantID vid)
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
+	RAJA_NO_SIMD
+        for (Index_type i = ibegin; i < iend; ++i ) {
+          MUL_BODY;
+        }
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+    case Base_Loop : {
+
+      MUL_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+        for (Index_type i = ibegin; i < iend; ++i ) {
+          MUL_BODY;
+        }
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+    case Base_Simd : {
+
+      MUL_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+	RAJA_SIMD
         for (Index_type i = ibegin; i < iend; ++i ) {
           MUL_BODY;
         }
@@ -78,6 +115,42 @@ void MUL::runKernel(VariantID vid)
     }
 
     case RAJA_Seq : {
+
+      MUL_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+        RAJA::forall<RAJA::seq_exec>(
+          RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
+          MUL_BODY;
+        });
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+    case RAJA_Loop : {
+
+      MUL_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+        RAJA::forall<RAJA::loop_exec>(
+          RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
+          MUL_BODY;
+        });
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+    case RAJA_Simd : {
 
       MUL_DATA_SETUP_CPU;
 
