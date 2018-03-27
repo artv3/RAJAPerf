@@ -39,7 +39,7 @@ TRIAD::TRIAD(const RunParams& params)
 {
   //setDefaultSize(1000000);
    setDefaultSize(1024);
-   setDefaultReps(9000);
+   setDefaultReps(900000);
 }
 
 TRIAD::~TRIAD() 
