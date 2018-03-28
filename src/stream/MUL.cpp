@@ -68,6 +68,11 @@ void MUL::runKernel(VariantID vid)
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
+#ifdef HINT_ALIGN
+	RAJA_ALIGN_DATA(b);
+	RAJA_ALIGN_DATA(c);
+#endif	
+
 	RAJA_NO_SIMD
         for (Index_type i = ibegin; i < iend; ++i ) {
           MUL_BODY;
@@ -82,6 +87,11 @@ void MUL::runKernel(VariantID vid)
     case Base_Loop : {
 
       MUL_DATA_SETUP_CPU;
+
+#ifdef HINT_ALIGN
+	RAJA_ALIGN_DATA(b);
+	RAJA_ALIGN_DATA(c);
+#endif	
 
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
@@ -99,6 +109,11 @@ void MUL::runKernel(VariantID vid)
     case Base_Simd : {
 
       MUL_DATA_SETUP_CPU;
+
+#ifdef HINT_ALIGN
+	RAJA_ALIGN_DATA(b);
+	RAJA_ALIGN_DATA(c);
+#endif	
 
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
@@ -118,6 +133,11 @@ void MUL::runKernel(VariantID vid)
 
       MUL_DATA_SETUP_CPU;
 
+#ifdef HINT_ALIGN
+	RAJA_ALIGN_DATA(b);
+	RAJA_ALIGN_DATA(c);
+#endif	
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -136,6 +156,11 @@ void MUL::runKernel(VariantID vid)
 
       MUL_DATA_SETUP_CPU;
 
+#ifdef HINT_ALIGN
+	RAJA_ALIGN_DATA(b);
+	RAJA_ALIGN_DATA(c);
+#endif	
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -153,6 +178,11 @@ void MUL::runKernel(VariantID vid)
     case RAJA_Simd : {
 
       MUL_DATA_SETUP_CPU;
+
+#ifdef HINT_ALIGN
+	RAJA_ALIGN_DATA(b);
+	RAJA_ALIGN_DATA(c);
+#endif	
 
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {

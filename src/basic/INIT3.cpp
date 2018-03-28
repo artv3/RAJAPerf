@@ -38,8 +38,8 @@ namespace basic
 INIT3::INIT3(const RunParams& params)
   : KernelBase(rajaperf::Basic_INIT3, params)
 {
-   setDefaultSize(100000);
-   setDefaultReps(5000);
+   setDefaultSize(1024);
+   setDefaultReps(900000);
 }
 
 INIT3::~INIT3() 
@@ -67,6 +67,14 @@ void INIT3::runKernel(VariantID vid)
 
       INIT3_DATA_SETUP_CPU;
 
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(out1);
+      RAJA_ALIGN_DATA(out2);
+      RAJA_ALIGN_DATA(out3);
+      RAJA_ALIGN_DATA(in1);
+      RAJA_ALIGN_DATA(in2);
+#endif
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -85,6 +93,14 @@ void INIT3::runKernel(VariantID vid)
 
       INIT3_DATA_SETUP_CPU;
 
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(out1);
+      RAJA_ALIGN_DATA(out2);
+      RAJA_ALIGN_DATA(out3);
+      RAJA_ALIGN_DATA(in1);
+      RAJA_ALIGN_DATA(in2);
+#endif
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -101,6 +117,14 @@ void INIT3::runKernel(VariantID vid)
     case Base_Simd : {
 
       INIT3_DATA_SETUP_CPU;
+
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(out1);
+      RAJA_ALIGN_DATA(out2);
+      RAJA_ALIGN_DATA(out3);
+      RAJA_ALIGN_DATA(in1);
+      RAJA_ALIGN_DATA(in2);
+#endif
 
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
@@ -119,6 +143,14 @@ void INIT3::runKernel(VariantID vid)
     case RAJA_Seq : {
 
       INIT3_DATA_SETUP_CPU;
+
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(out1);
+      RAJA_ALIGN_DATA(out2);
+      RAJA_ALIGN_DATA(out3);
+      RAJA_ALIGN_DATA(in1);
+      RAJA_ALIGN_DATA(in2);
+#endif
 
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
@@ -139,6 +171,14 @@ void INIT3::runKernel(VariantID vid)
 
       INIT3_DATA_SETUP_CPU;
 
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(out1);
+      RAJA_ALIGN_DATA(out2);
+      RAJA_ALIGN_DATA(out3);
+      RAJA_ALIGN_DATA(in1);
+      RAJA_ALIGN_DATA(in2);
+#endif
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -158,6 +198,14 @@ void INIT3::runKernel(VariantID vid)
 
       INIT3_DATA_SETUP_CPU;
 
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(out1);
+      RAJA_ALIGN_DATA(out2);
+      RAJA_ALIGN_DATA(out3);
+      RAJA_ALIGN_DATA(in1);
+      RAJA_ALIGN_DATA(in2);
+#endif
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -171,7 +219,6 @@ void INIT3::runKernel(VariantID vid)
 
       break;
     }
-
 
 
 #if defined(RAJA_ENABLE_OPENMP)

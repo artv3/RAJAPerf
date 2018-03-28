@@ -43,8 +43,8 @@ namespace basic
 INIT_VIEW1D::INIT_VIEW1D(const RunParams& params)
   : KernelBase(rajaperf::Basic_INIT_VIEW1D, params)
 {
-   setDefaultSize(500000);
-   setDefaultReps(5000);
+   setDefaultSize(1024);
+   setDefaultReps(9000000);
 }
 
 INIT_VIEW1D::~INIT_VIEW1D() 
@@ -69,6 +69,10 @@ void INIT_VIEW1D::runKernel(VariantID vid)
 
       INIT_VIEW1D_DATA_SETUP_CPU;
 
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(a);
+#endif
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -87,6 +91,10 @@ void INIT_VIEW1D::runKernel(VariantID vid)
 
       INIT_VIEW1D_DATA_SETUP_CPU;
 
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(a);
+#endif
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -103,6 +111,10 @@ void INIT_VIEW1D::runKernel(VariantID vid)
     case Base_Simd : {
 
       INIT_VIEW1D_DATA_SETUP_CPU;
+
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(a);
+#endif
 
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
@@ -122,6 +134,10 @@ void INIT_VIEW1D::runKernel(VariantID vid)
 
       INIT_VIEW1D_DATA_RAJA_SETUP_CPU;
 
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(a);
+#endif
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -140,6 +156,10 @@ void INIT_VIEW1D::runKernel(VariantID vid)
 
       INIT_VIEW1D_DATA_RAJA_SETUP_CPU;
 
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(a);
+#endif
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -157,6 +177,10 @@ void INIT_VIEW1D::runKernel(VariantID vid)
     case RAJA_Simd : {
 
       INIT_VIEW1D_DATA_RAJA_SETUP_CPU;
+
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(a);
+#endif
 
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {

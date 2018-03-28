@@ -24,6 +24,8 @@
 #include "RAJAPerfSuite.hpp"
 #include "RPTypes.hpp"
 
+#define HINT_ALIGN
+//#undef HINT_ALIGN
 
 namespace rajaperf
 {

@@ -67,6 +67,10 @@ void NESTED_INIT::runKernel(VariantID vid)
 
       NESTED_INIT_DATA_SETUP_CPU;
 
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(array);
+#endif
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -91,6 +95,10 @@ void NESTED_INIT::runKernel(VariantID vid)
 
       NESTED_INIT_DATA_SETUP_CPU;
 
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(array);
+#endif
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -112,6 +120,10 @@ void NESTED_INIT::runKernel(VariantID vid)
 
       NESTED_INIT_DATA_SETUP_CPU;
 
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(array);
+#endif
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -130,20 +142,27 @@ void NESTED_INIT::runKernel(VariantID vid)
       break;
     }
 
-#if 0
+
     case RAJA_Seq : {
 
       NESTED_INIT_DATA_SETUP_CPU;
 
-      using EXEC_POL = RAJA::nested::Policy<
-                             RAJA::nested::For<2, RAJA::seq_exec>,    // k
-                             RAJA::nested::For<1, RAJA::seq_exec>,    // j
-                             RAJA::nested::For<0, RAJA::seq_exec> >;  // i
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(array);
+#endif
+
+      using NESTED_EXEC_POL = 
+	RAJA::KernelPolicy<
+	  RAJA::statement::For<2, RAJA::seq_exec,
+	  RAJA::statement::For<1, RAJA::seq_exec,
+	  RAJA::statement::For<0, RAJA::seq_exec,
+			       RAJA::statement::Lambda<0>
+			       > > > >;
 
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
-        RAJA::nested::forall(EXEC_POL{},
+	RAJA::kernel<NESTED_EXEC_POL>(
                              RAJA::make_tuple(RAJA::RangeSegment(0, ni),
                                               RAJA::RangeSegment(0, nj),
                                               RAJA::RangeSegment(0, nk)),
@@ -161,15 +180,22 @@ void NESTED_INIT::runKernel(VariantID vid)
 
       NESTED_INIT_DATA_SETUP_CPU;
 
-      using EXEC_POL = RAJA::nested::Policy<
-                             RAJA::nested::For<2, RAJA::loop_exec>,    // k
-                             RAJA::nested::For<1, RAJA::loop_exec>,    // j
-                             RAJA::nested::For<0, RAJA::loop_exec> >; // i
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(array);
+#endif
+
+      using NESTED_EXEC_POL = 
+	RAJA::KernelPolicy<
+	  RAJA::statement::For<2, RAJA::loop_exec,   
+	  RAJA::statement::For<1, RAJA::loop_exec,  
+	  RAJA::statement::For<0, RAJA::loop_exec,  
+			       RAJA::statement::Lambda<0>
+			       > > > >;
 
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
-        RAJA::nested::forall(EXEC_POL{},
+	RAJA::kernel<NESTED_EXEC_POL>(
                              RAJA::make_tuple(RAJA::RangeSegment(0, ni),
                                               RAJA::RangeSegment(0, nj),
                                               RAJA::RangeSegment(0, nk)),
@@ -182,21 +208,27 @@ void NESTED_INIT::runKernel(VariantID vid)
 
       break;
     }
-
 
     case RAJA_Simd : {
 
       NESTED_INIT_DATA_SETUP_CPU;
 
-      using EXEC_POL = RAJA::nested::Policy<
-                             RAJA::nested::For<2, RAJA::loop_exec>,    // k
-                             RAJA::nested::For<1, RAJA::loop_exec>,    // j
-                             RAJA::nested::For<0, RAJA::simd_exec> >; // i
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(array);
+#endif
+
+      using NESTED_EXEC_POL = 
+	RAJA::KernelPolicy<
+	  RAJA::statement::For<2, RAJA::loop_exec,    
+	  RAJA::statement::For<1, RAJA::loop_exec,  
+	  RAJA::statement::For<0, RAJA::simd_exec,  
+			       RAJA::statement::Lambda<0>
+			       > > > >;
 
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
-        RAJA::nested::forall(EXEC_POL{},
+	RAJA::kernel<NESTED_EXEC_POL>(
                              RAJA::make_tuple(RAJA::RangeSegment(0, ni),
                                               RAJA::RangeSegment(0, nj),
                                               RAJA::RangeSegment(0, nk)),
@@ -210,6 +242,12 @@ void NESTED_INIT::runKernel(VariantID vid)
       break;
     }
 
+
+
+
+
+
+#if 0
 #if defined(RAJA_ENABLE_OPENMP)
     case Base_OpenMP : {
 

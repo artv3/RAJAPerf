@@ -52,8 +52,8 @@ Real_type trap_int_func(Real_type x,
 TRAP_INT::TRAP_INT(const RunParams& params)
   : KernelBase(rajaperf::Basic_TRAP_INT, params)
 {
-   setDefaultSize(100000);
-   setDefaultReps(2000);
+   setDefaultSize(1024);
+   setDefaultReps(900000);
 }
 
 TRAP_INT::~TRAP_INT() 

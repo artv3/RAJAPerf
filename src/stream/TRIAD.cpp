@@ -66,6 +66,12 @@ void TRIAD::runKernel(VariantID vid)
 
       TRIAD_DATA_SETUP_CPU;
 
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(a);
+      RAJA_ALIGN_DATA(b);
+      RAJA_ALIGN_DATA(c);
+#endif
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -84,6 +90,11 @@ void TRIAD::runKernel(VariantID vid)
 
       TRIAD_DATA_SETUP_CPU;
 
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(a);
+      RAJA_ALIGN_DATA(b);
+      RAJA_ALIGN_DATA(c);
+#endif
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -100,6 +111,12 @@ void TRIAD::runKernel(VariantID vid)
     case Base_Simd : {
 
       TRIAD_DATA_SETUP_CPU;
+
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(a);
+      RAJA_ALIGN_DATA(b);
+      RAJA_ALIGN_DATA(c);
+#endif
 
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
@@ -120,6 +137,11 @@ void TRIAD::runKernel(VariantID vid)
 
       TRIAD_DATA_SETUP_CPU;
 
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(a);
+      RAJA_ALIGN_DATA(b);
+      RAJA_ALIGN_DATA(c);
+#endif
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -138,6 +160,12 @@ void TRIAD::runKernel(VariantID vid)
 
       TRIAD_DATA_SETUP_CPU;
 
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(a);
+      RAJA_ALIGN_DATA(b);
+      RAJA_ALIGN_DATA(c);
+#endif
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -155,6 +183,12 @@ void TRIAD::runKernel(VariantID vid)
     case RAJA_Simd : {
 
       TRIAD_DATA_SETUP_CPU;
+
+#ifdef HINT_ALIGN
+      RAJA_ALIGN_DATA(a);
+      RAJA_ALIGN_DATA(b);
+      RAJA_ALIGN_DATA(c);
+#endif
 
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {

@@ -71,6 +71,10 @@ void INIT_VIEW1D_OFFSET::runKernel(VariantID vid)
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
+#ifdef HINT_ALIGN
+	RAJA_ALIGN_DATA(a);
+#endif
+
 	RAJA_NO_SIMD
         for (Index_type i = ibegin; i < iend; ++i ) {
           INIT_VIEW1D_OFFSET_BODY;
@@ -85,6 +89,10 @@ void INIT_VIEW1D_OFFSET::runKernel(VariantID vid)
   case Base_Loop : {
     
      INIT_VIEW1D_OFFSET_DATA_SETUP_CPU;
+
+#ifdef HINT_ALIGN
+	RAJA_ALIGN_DATA(a);
+#endif
 
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
@@ -102,6 +110,10 @@ void INIT_VIEW1D_OFFSET::runKernel(VariantID vid)
   case Base_Simd : {
 
       INIT_VIEW1D_OFFSET_DATA_SETUP_CPU;
+
+#ifdef HINT_ALIGN
+	RAJA_ALIGN_DATA(a);
+#endif
 
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
@@ -121,6 +133,10 @@ void INIT_VIEW1D_OFFSET::runKernel(VariantID vid)
     
     INIT_VIEW1D_OFFSET_DATA_RAJA_SETUP_CPU;
     
+#ifdef HINT_ALIGN
+	RAJA_ALIGN_DATA(a);
+#endif
+
     startTimer();
     for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
       
@@ -139,6 +155,10 @@ void INIT_VIEW1D_OFFSET::runKernel(VariantID vid)
 
       INIT_VIEW1D_OFFSET_DATA_RAJA_SETUP_CPU;
 
+#ifdef HINT_ALIGN
+	RAJA_ALIGN_DATA(a);
+#endif
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -156,6 +176,10 @@ void INIT_VIEW1D_OFFSET::runKernel(VariantID vid)
     case RAJA_Simd : {
 
       INIT_VIEW1D_OFFSET_DATA_RAJA_SETUP_CPU;
+
+#ifdef HINT_ALIGN
+	RAJA_ALIGN_DATA(a);
+#endif
 
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {

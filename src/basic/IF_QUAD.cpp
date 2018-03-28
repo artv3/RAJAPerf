@@ -38,8 +38,8 @@ namespace basic
 IF_QUAD::IF_QUAD(const RunParams& params)
   : KernelBase(rajaperf::Basic_IF_QUAD, params)
 {
-   setDefaultSize(100000);
-   setDefaultReps(1800);
+   setDefaultSize(1024);
+   setDefaultReps(900000);
 }
 
 IF_QUAD::~IF_QUAD() 
@@ -67,6 +67,14 @@ void IF_QUAD::runKernel(VariantID vid)
 
       IF_QUAD_DATA_SETUP_CPU;
 
+#ifdef HINT_ALIGN	
+	RAJA_ALIGN_DATA(a);
+	RAJA_ALIGN_DATA(b);
+	RAJA_ALIGN_DATA(c);
+	RAJA_ALIGN_DATA(x1);
+	RAJA_ALIGN_DATA(x2);
+#endif
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -85,6 +93,14 @@ void IF_QUAD::runKernel(VariantID vid)
 
       IF_QUAD_DATA_SETUP_CPU;
 
+#ifdef HINT_ALIGN	
+	RAJA_ALIGN_DATA(a);
+	RAJA_ALIGN_DATA(b);
+	RAJA_ALIGN_DATA(c);
+	RAJA_ALIGN_DATA(x1);
+	RAJA_ALIGN_DATA(x2);
+#endif
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -101,6 +117,14 @@ void IF_QUAD::runKernel(VariantID vid)
     case Base_Simd : {
 
       IF_QUAD_DATA_SETUP_CPU;
+
+#ifdef HINT_ALIGN	
+	RAJA_ALIGN_DATA(a);
+	RAJA_ALIGN_DATA(b);
+	RAJA_ALIGN_DATA(c);
+	RAJA_ALIGN_DATA(x1);
+	RAJA_ALIGN_DATA(x2);
+#endif
 
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
@@ -120,6 +144,14 @@ void IF_QUAD::runKernel(VariantID vid)
 
       IF_QUAD_DATA_SETUP_CPU;
 
+#ifdef HINT_ALIGN	
+	RAJA_ALIGN_DATA(a);
+	RAJA_ALIGN_DATA(b);
+	RAJA_ALIGN_DATA(c);
+	RAJA_ALIGN_DATA(x1);
+	RAJA_ALIGN_DATA(x2);
+#endif
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -138,6 +170,14 @@ void IF_QUAD::runKernel(VariantID vid)
 
       IF_QUAD_DATA_SETUP_CPU;
 
+#ifdef HINT_ALIGN	
+	RAJA_ALIGN_DATA(a);
+	RAJA_ALIGN_DATA(b);
+	RAJA_ALIGN_DATA(c);
+	RAJA_ALIGN_DATA(x1);
+	RAJA_ALIGN_DATA(x2);
+#endif
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -155,6 +195,14 @@ void IF_QUAD::runKernel(VariantID vid)
     case RAJA_Simd : {
 
       IF_QUAD_DATA_SETUP_CPU;
+
+#ifdef HINT_ALIGN	
+	RAJA_ALIGN_DATA(a);
+	RAJA_ALIGN_DATA(b);
+	RAJA_ALIGN_DATA(c);
+	RAJA_ALIGN_DATA(x1);
+	RAJA_ALIGN_DATA(x2);
+#endif
 
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
