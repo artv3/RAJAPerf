@@ -70,6 +70,30 @@ void NESTED_INIT::runKernel(VariantID vid)
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
+	RAJA_NO_SIMD
+        for (Index_type k = 0; k < nk; ++k ) {
+	  RAJA_NO_SIMD
+          for (Index_type j = 0; j < nj; ++j ) {
+	    RAJA_NO_SIMD
+            for (Index_type i = 0; i < ni; ++i ) {
+              NESTED_INIT_BODY;
+            }
+          }
+        }
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+    case Base_Loop : {
+
+      NESTED_INIT_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
         for (Index_type k = 0; k < nk; ++k ) {
           for (Index_type j = 0; j < nj; ++j ) {
             for (Index_type i = 0; i < ni; ++i ) {
@@ -84,7 +108,82 @@ void NESTED_INIT::runKernel(VariantID vid)
       break;
     }
 
+    case Base_Simd : {
+
+      NESTED_INIT_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+        for (Index_type k = 0; k < nk; ++k ) {
+          for (Index_type j = 0; j < nj; ++j ) {
+	    RAJA_SIMD
+            for (Index_type i = 0; i < ni; ++i ) {
+              NESTED_INIT_BODY;
+            }
+          }
+        }
+
+      }
+      stopTimer();
+
+      break;
+    }
+
     case RAJA_Seq : {
+
+      NESTED_INIT_DATA_SETUP_CPU;
+
+      using EXEC_POL = RAJA::nested::Policy<
+                             RAJA::nested::For<2, RAJA::seq_exec>,    // k
+                             RAJA::nested::For<1, RAJA::seq_exec>,    // j
+                             RAJA::nested::For<0, RAJA::seq_exec> >;  // i
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+        RAJA::nested::forall(EXEC_POL{},
+                             RAJA::make_tuple(RAJA::RangeSegment(0, ni),
+                                              RAJA::RangeSegment(0, nj),
+                                              RAJA::RangeSegment(0, nk)),
+             [=](Index_type i, Index_type j, Index_type k) {     
+             NESTED_INIT_BODY;
+        });
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+    case RAJA_Loop : {
+
+      NESTED_INIT_DATA_SETUP_CPU;
+
+      using EXEC_POL = RAJA::nested::Policy<
+                             RAJA::nested::For<2, RAJA::loop_exec>,    // k
+                             RAJA::nested::For<1, RAJA::loop_exec>,    // j
+                             RAJA::nested::For<0, RAJA::loop_exec> >; // i
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+        RAJA::nested::forall(EXEC_POL{},
+                             RAJA::make_tuple(RAJA::RangeSegment(0, ni),
+                                              RAJA::RangeSegment(0, nj),
+                                              RAJA::RangeSegment(0, nk)),
+             [=](Index_type i, Index_type j, Index_type k) {     
+             NESTED_INIT_BODY;
+        });
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+
+    case RAJA_Simd : {
 
       NESTED_INIT_DATA_SETUP_CPU;
 

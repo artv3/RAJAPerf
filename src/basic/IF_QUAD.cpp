@@ -70,6 +70,42 @@ void IF_QUAD::runKernel(VariantID vid)
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
+	RAJA_NO_SIMD
+        for (Index_type i = ibegin; i < iend; ++i ) {
+          IF_QUAD_BODY;
+        }
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+    case Base_Loop : {
+
+      IF_QUAD_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+        for (Index_type i = ibegin; i < iend; ++i ) {
+          IF_QUAD_BODY;
+        }
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+    case Base_Simd : {
+
+      IF_QUAD_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+	RAJA_SIMD
         for (Index_type i = ibegin; i < iend; ++i ) {
           IF_QUAD_BODY;
         }
@@ -87,7 +123,43 @@ void IF_QUAD::runKernel(VariantID vid)
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
+        RAJA::forall<RAJA::seq_exec>(
+          RAJA::RangeSegment(ibegin, iend), [=](int i) {
+          IF_QUAD_BODY;
+        });
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+    case RAJA_Loop : {
+
+      IF_QUAD_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
         RAJA::forall<RAJA::loop_exec>(
+          RAJA::RangeSegment(ibegin, iend), [=](int i) {
+          IF_QUAD_BODY;
+        });
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+    case RAJA_Simd : {
+
+      IF_QUAD_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+        RAJA::forall<RAJA::simd_exec>(
           RAJA::RangeSegment(ibegin, iend), [=](int i) {
           IF_QUAD_BODY;
         });

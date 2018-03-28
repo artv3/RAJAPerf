@@ -70,6 +70,42 @@ void INIT3::runKernel(VariantID vid)
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
+	RAJA_NO_SIMD
+        for (Index_type i = ibegin; i < iend; ++i ) {
+          INIT3_BODY;
+        }
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+    case Base_Loop : {
+
+      INIT3_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+        for (Index_type i = ibegin; i < iend; ++i ) {
+          INIT3_BODY;
+        }
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+    case Base_Simd : {
+
+      INIT3_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+	RAJA_SIMD
         for (Index_type i = ibegin; i < iend; ++i ) {
           INIT3_BODY;
         }
@@ -87,6 +123,44 @@ void INIT3::runKernel(VariantID vid)
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
+        RAJA::forall<RAJA::seq_exec>(
+          RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
+          INIT3_BODY;
+        });
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+
+    case RAJA_Loop : {
+
+      INIT3_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+        RAJA::forall<RAJA::loop_exec>(
+          RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
+          INIT3_BODY;
+        });
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+
+    case RAJA_Simd : {
+
+      INIT3_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
         RAJA::forall<RAJA::simd_exec>(
           RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
           INIT3_BODY;
@@ -97,6 +171,8 @@ void INIT3::runKernel(VariantID vid)
 
       break;
     }
+
+
 
 #if defined(RAJA_ENABLE_OPENMP)
     case Base_OpenMP : {

@@ -71,6 +71,7 @@ void INIT_VIEW1D_OFFSET::runKernel(VariantID vid)
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
+	RAJA_NO_SIMD
         for (Index_type i = ibegin; i < iend; ++i ) {
           INIT_VIEW1D_OFFSET_BODY;
         }
@@ -81,7 +82,78 @@ void INIT_VIEW1D_OFFSET::runKernel(VariantID vid)
       break;
     }
 
-    case RAJA_Seq : {
+  case Base_Loop : {
+    
+     INIT_VIEW1D_OFFSET_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+        for (Index_type i = ibegin; i < iend; ++i ) {
+          INIT_VIEW1D_OFFSET_BODY;
+        }
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+  case Base_Simd : {
+
+      INIT_VIEW1D_OFFSET_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+	RAJA_SIMD
+        for (Index_type i = ibegin; i < iend; ++i ) {
+          INIT_VIEW1D_OFFSET_BODY;
+        }
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+  case RAJA_Seq : {
+    
+    INIT_VIEW1D_OFFSET_DATA_RAJA_SETUP_CPU;
+    
+    startTimer();
+    for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+      
+      RAJA::forall<RAJA::seq_exec>(
+	  RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
+          INIT_VIEW1D_OFFSET_BODY_RAJA;
+        });
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+    case RAJA_Loop : {
+
+      INIT_VIEW1D_OFFSET_DATA_RAJA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+        RAJA::forall<RAJA::loop_exec>(
+          RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
+          INIT_VIEW1D_OFFSET_BODY_RAJA;
+        });
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+    case RAJA_Simd : {
 
       INIT_VIEW1D_OFFSET_DATA_RAJA_SETUP_CPU;
 

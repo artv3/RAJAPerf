@@ -38,8 +38,8 @@ namespace basic
 MULADDSUB::MULADDSUB(const RunParams& params)
   : KernelBase(rajaperf::Basic_MULADDSUB, params)
 {
-   setDefaultSize(100000);
-   setDefaultReps(3500);
+   setDefaultSize(1024);
+   setDefaultReps(900000);
 }
 
 MULADDSUB::~MULADDSUB() 
@@ -70,6 +70,7 @@ void MULADDSUB::runKernel(VariantID vid)
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
+	RAJA_NO_SIMD
         for (Index_type i = ibegin; i < iend; ++i ) {
           MULADDSUB_BODY;
         }
@@ -80,7 +81,78 @@ void MULADDSUB::runKernel(VariantID vid)
       break;
     }
 
-    case RAJA_Seq : {
+    case Base_Loop : {
+
+      MULADDSUB_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+        for (Index_type i = ibegin; i < iend; ++i ) {
+          MULADDSUB_BODY;
+        }
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+    case Base_Simd : {
+
+      MULADDSUB_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+	RAJA_SIMD
+        for (Index_type i = ibegin; i < iend; ++i ) {
+          MULADDSUB_BODY;
+        }
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+   case RAJA_Seq : {
+
+      MULADDSUB_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+        RAJA::forall<RAJA::seq_exec>(
+          RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
+          MULADDSUB_BODY;
+        });
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+   case RAJA_Loop : {
+
+      MULADDSUB_DATA_SETUP_CPU;
+
+      startTimer();
+      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
+
+        RAJA::forall<RAJA::loop_exec>(
+          RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
+          MULADDSUB_BODY;
+        });
+
+      }
+      stopTimer();
+
+      break;
+    }
+
+   case RAJA_Simd : {
 
       MULADDSUB_DATA_SETUP_CPU;
 
