@@ -143,6 +143,7 @@ void POLYBENCH_GEMMVER::runKernel(VariantID vid)
       break;
     }
 
+#if 0
     case RAJA_Seq : {
 
       POLYBENCH_GEMMVER_DATA_SETUP_CPU;
@@ -271,6 +272,8 @@ void POLYBENCH_GEMMVER::runKernel(VariantID vid)
       break;
     }
 #endif //RAJA_ENABLE_OPENMP
+
+#endif //block nested variants
 
 #if defined(RAJA_ENABLE_TARGET_OPENMP)
     case Base_OpenMPTarget :

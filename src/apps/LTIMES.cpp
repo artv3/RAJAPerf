@@ -100,6 +100,7 @@ void LTIMES::runKernel(VariantID vid)
       break;
     } 
 
+#if 0
     case RAJA_Seq : {
 
       LTIMES_DATA_SETUP_CPU;
@@ -185,6 +186,8 @@ void LTIMES::runKernel(VariantID vid)
       break;
     }
 #endif
+
+#endif //block nested
 
 #if defined(RAJA_ENABLE_TARGET_OPENMP)
     case Base_OpenMPTarget :

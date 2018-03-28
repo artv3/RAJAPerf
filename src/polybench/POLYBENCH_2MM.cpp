@@ -135,6 +135,7 @@ void POLYBENCH_2MM::runKernel(VariantID vid)
       break;
     }
 
+#if 0
     case RAJA_Seq : {
 
       POLYBENCH_2MM_DATA_SETUP_CPU;
@@ -257,6 +258,8 @@ void POLYBENCH_2MM::runKernel(VariantID vid)
       break;
     }
 #endif //RAJA_ENABLE_OPENMP
+
+#endif //block variants
 
 #if defined(RAJA_ENABLE_TARGET_OPENMP)
     case Base_OpenMPTarget :

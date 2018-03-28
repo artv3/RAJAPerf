@@ -130,6 +130,7 @@ void NESTED_INIT::runKernel(VariantID vid)
       break;
     }
 
+#if 0
     case RAJA_Seq : {
 
       NESTED_INIT_DATA_SETUP_CPU;
@@ -260,6 +261,8 @@ void NESTED_INIT::runKernel(VariantID vid)
       break;
     }
 #endif
+
+#endif//block off nested
 
 #if defined(RAJA_ENABLE_TARGET_OPENMP)
     case Base_OpenMPTarget :
