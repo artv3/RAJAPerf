@@ -40,8 +40,8 @@ namespace basic
 INIT_VIEW1D_OFFSET::INIT_VIEW1D_OFFSET(const RunParams& params)
   : KernelBase(rajaperf::Basic_INIT_VIEW1D_OFFSET, params)
 {
-   setDefaultSize(500000);
-   setDefaultReps(5000);
+   setDefaultSize(2048);
+   setDefaultReps(900000);
 }
 
 INIT_VIEW1D_OFFSET::~INIT_VIEW1D_OFFSET() 

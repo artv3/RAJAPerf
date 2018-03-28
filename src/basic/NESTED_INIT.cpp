@@ -37,9 +37,9 @@ namespace basic
 NESTED_INIT::NESTED_INIT(const RunParams& params)
   : KernelBase(rajaperf::Basic_NESTED_INIT, params)
 {
-  m_ni = 500;
-  m_nj = 500;
-  m_nk = m_nk_init = 50;
+  m_ni = 12;
+  m_nj = 12;
+  m_nk = m_nk_init = 128;
 
   setDefaultSize(m_ni * m_nj * m_nk);
   setDefaultReps(100);

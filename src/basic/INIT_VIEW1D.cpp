@@ -36,14 +36,13 @@ namespace basic
   const Real_type v = m_val; \
 \
   using ViewType = RAJA::View<Real_type, RAJA::Layout<1> >; \
-  const RAJA::Layout<1> my_layout(iend); \
+  const RAJA::Layout<1> my_layout(iend);		    \
   ViewType view(a, my_layout);
-
 
 INIT_VIEW1D::INIT_VIEW1D(const RunParams& params)
   : KernelBase(rajaperf::Basic_INIT_VIEW1D, params)
 {
-   setDefaultSize(1024);
+   setDefaultSize(2048);
    setDefaultReps(9000000);
 }
 
@@ -164,7 +163,7 @@ void INIT_VIEW1D::runKernel(VariantID vid)
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
         RAJA::forall<RAJA::loop_exec>(
-          RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
+	  RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
           INIT_VIEW1D_BODY_RAJA;
         });
 
